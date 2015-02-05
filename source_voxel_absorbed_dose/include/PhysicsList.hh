@@ -23,70 +23,60 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
+/// \file electromagnetic/TestEm0/include/PhysicsList.hh
+/// \brief Definition of the PhysicsList class
+//
+//
 // $Id$
 //
-/// \file VoxelSValuesSteppingAction.cc
-/// \brief Implementation of the VoxelSValuesSteppingAction class
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//
+// 14.10.02 (V.Ivanchenko) provide modular list on base of old PhysicsList
+//
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#include "VoxelSValuesSteppingAction.hh"
+#ifndef PhysicsList_h
+#define PhysicsList_h 1
 
-#include "VoxelSValuesDetectorConstruction.hh"
+#include "G4VModularPhysicsList.hh"
+#include "globals.hh"
 
-#include "G4Step.hh"
-#include "G4RunManager.hh"
-#include "G4UnitsTable.hh"
+class PhysicsListMessenger;
+class G4VPhysicsConstructor;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-VoxelSValuesSteppingAction* VoxelSValuesSteppingAction::fgInstance = 0;
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-VoxelSValuesSteppingAction* VoxelSValuesSteppingAction::Instance()
+class PhysicsList: public G4VModularPhysicsList
 {
-// Static access function via G4RunManager 
-
-  return fgInstance;
-}      
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-VoxelSValuesSteppingAction::VoxelSValuesSteppingAction()
-: G4UserSteppingAction(),
-  fVolume(0),
-  fEnergy(0.)
-{ 
-  fgInstance = this;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-VoxelSValuesSteppingAction::~VoxelSValuesSteppingAction()
-{ 
-  fgInstance = 0;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void VoxelSValuesSteppingAction::UserSteppingAction(const G4Step* step)
-{
-  // get volume of the current step
-  G4LogicalVolume* volume 
-    = step->GetPreStepPoint()->GetTouchableHandle()
-      ->GetVolume()->GetLogicalVolume();
+  public:
+    PhysicsList();
+   ~PhysicsList();
+   
+    virtual void ConstructParticle();
+    virtual void ConstructProcess();
+    
+    void AddPhysicsList(const G4String& name);
+    
+    virtual void SetCuts();
+    
+    void SetCutForGamma(G4double);
+    void SetCutForElectron(G4double);
+    void SetCutForPositron(G4double);
       
-  // check if we are in scoring volume
-  if (volume != fVolume ) return;
-
-  // collect energy and track length step by step
-  G4double edep = step->GetTotalEnergyDeposit();
-  fEnergy += edep;
-}
+  private:
+    G4double fCutForGamma;
+    G4double fCutForElectron;
+    G4double fCutForPositron;
+    G4double fCurrentDefaultCut;
+    
+    G4VPhysicsConstructor*  fEmPhysicsList;
+    G4String                fEmName;
+    
+    PhysicsListMessenger*   fMessenger;         
+};
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void VoxelSValuesSteppingAction::Reset()
-{
-  fEnergy = 0.;
-}
+#endif
 

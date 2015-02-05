@@ -1,0 +1,8 @@
+# Macro file for example B1
+# 
+# Can be run in batch, without graphic
+# or interactively: Idle> /control/execute run1.mac
+#
+/gun/particle gamma
+/gun/energy 100 keV
+/run/beamOn 1000000

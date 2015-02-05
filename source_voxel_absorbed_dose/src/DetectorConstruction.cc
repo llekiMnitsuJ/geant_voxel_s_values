@@ -28,10 +28,13 @@
 /// \file VoxelSValues.cc
 /// \brief Implementation of the VoxelSValues class
 
-#include "VoxelSValuesDetectorConstruction.hh"
-#include "VoxelSValuesSteppingAction.hh"
-   // use of stepping action to set the accounting volume
+// includes for application written by end user
+#include "DetectorConstruction.hh"
+// use of stepping action to set the accounting volume
+#include "SteppingAction.hh"
 
+
+//g4 includes (written by g4 team)
 #include "G4RunManager.hh"
 #include "G4NistManager.hh"
 #include "G4Box.hh"
@@ -42,6 +45,7 @@
 #include "G4LogicalVolume.hh"
 #include "G4PVPlacement.hh"
 #include "G4SystemOfUnits.hh"
+#include "G4VisAttributes.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -107,6 +111,11 @@ G4VPhysicalVolume* VoxelSValuesDetectorConstruction::Construct()
     new G4LogicalVolume(solidPhantom,            //its solid
                         phantom_mat,             //its material
                         "Phantom");         //its name
+
+  G4VisAttributes* phantomVisAtt = new G4VisAttributes(G4Colour::Green());
+  phantomVisAtt->SetForceWireframe(true);
+  logicPhantom->SetVisAttributes(phantomVisAtt);
+
                
   new G4PVPlacement(0,                       //no rotation
                     G4ThreeVector(),         //at (0,0,0)
@@ -123,7 +132,7 @@ G4VPhysicalVolume* VoxelSValuesDetectorConstruction::Construct()
   //
   
   G4Material* sourceVoxelMat = nist->FindOrBuildMaterial("G4_WATER");
-  G4ThreeVector pos1 = G4ThreeVector(0*cm, 0*cm, 0*cm);
+  G4ThreeVector pos1 = G4ThreeVector(0*mm, 0*cm, 0*cm);
         
   // Box shape for isotropic voxel
   G4double dx=3*mm;
@@ -134,6 +143,9 @@ G4VPhysicalVolume* VoxelSValuesDetectorConstruction::Construct()
     new G4LogicalVolume(solidVoxel,         //its solid
                         sourceVoxelMat,          //its material
                         "solidVoxel");           //its name
+  G4VisAttributes* voxelVisAtt = new G4VisAttributes(G4Colour::White());
+  voxelVisAtt->SetForceSolid(true);
+  logicVoxel->SetVisAttributes(voxelVisAtt);
                
   new G4PVPlacement(0,                       //no rotation
                     pos1,                    //at position

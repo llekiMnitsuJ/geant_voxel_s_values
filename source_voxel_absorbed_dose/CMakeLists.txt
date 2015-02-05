@@ -49,6 +49,12 @@ set(EXAMPLEVoxelSValues_SCRIPTS
   run1.mac
   run2.mac
   vis.mac
+  1MeV_gamma_run.mac
+  100keV_gamma_run.mac
+  10keV_gamma_run.mac
+  1MeV_electron_run.mac
+  100keV_electron_run.mac
+  10keV_electron_run.mac
   )
 
 foreach(_script ${EXAMPLEVoxelSValues_SCRIPTS})

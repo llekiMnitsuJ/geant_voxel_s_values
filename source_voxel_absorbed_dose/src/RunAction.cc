@@ -28,15 +28,17 @@
 /// \file VoxelSValuesRunAction.cc
 /// \brief Implementation of the VoxelSValuesRunAction class
 
-#include "VoxelSValuesRunAction.hh"
-#include "VoxelSValuesPrimaryGeneratorAction.hh"
-#include "VoxelSValuesEventAction.hh"
-#include "VoxelSValuesSteppingAction.hh"
+//includes written by application end user
+#include "RunAction.hh"
+#include "PrimaryGeneratorAction.hh"
+#include "EventAction.hh"
+#include "SteppingAction.hh"
   // use of other actions 
   // - primary generator: to get info for printing about the primary
   // - event action: to get and reset accumulated energy sums
   // - stepping action: to get info about accounting volume 
 
+//includes written by g4 team
 #include "G4Run.hh"
 #include "G4RunManager.hh"
 #include "G4UnitsTable.hh"
@@ -104,16 +106,17 @@ void VoxelSValuesRunAction::EndOfRunAction(const G4Run* aRun)
     = particleGun->GetParticleDefinition()->GetParticleName();                       
   G4double particleEnergy = particleGun->GetParticleEnergy();
         
+  G4double dNumEvents = static_cast<G4double>(nofEvents); 
   // Print
   //  
   G4cout
      << "\n--------------------End of Run------------------------------\n"
      << " The run consists of " << nofEvents << " "<< particleName << " of "
      <<   G4BestUnit(particleEnergy,"Energy")      
-     << "\n Dose in scoring volume " 
+     << "\n Dose/"<< particleName << " in scoring volume is " 
      << VoxelSValuesSteppingAction::Instance()->GetVolume()->GetName() << " : " 
-     << G4BestUnit(dose,"Dose")
-     << " +- "                   << G4BestUnit(rmsDose,"Dose")
+     << G4BestUnit(dose/dNumEvents,"Dose")
+     << " +- "                   << G4BestUnit(rmsDose/dNumEvents,"Dose")
      << "\n------------------------------------------------------------\n"
      << G4endl;
 }

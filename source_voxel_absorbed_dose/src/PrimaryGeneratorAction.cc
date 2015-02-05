@@ -31,8 +31,11 @@
 /// \file VoxelSValuesPrimaryGeneratorAction.cc
 /// \brief Implementation of the VoxelSValuesPrimaryGeneratorAction class
 
-#include "VoxelSValuesPrimaryGeneratorAction.hh"
+//includes written for application by end user
+#include "PrimaryGeneratorAction.hh"
 
+
+//includes written by g4 team
 #include "G4LogicalVolumeStore.hh"
 #include "G4LogicalVolume.hh"
 #include "G4Box.hh"
@@ -69,10 +72,10 @@ VoxelSValuesPrimaryGeneratorAction::VoxelSValuesPrimaryGeneratorAction()
   G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
   G4String particleName;
   G4ParticleDefinition* particle
-    = particleTable->FindParticle(particleName="gamma");
+    = particleTable->FindParticle(particleName="e-");
   fParticleGun->SetParticleDefinition(particle);
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
-  fParticleGun->SetParticleEnergy(1.*MeV);
+  fParticleGun->SetParticleEnergy(0.01*MeV);
   
   fgInstance = this;
 }

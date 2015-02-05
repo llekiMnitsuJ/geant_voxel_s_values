@@ -23,82 +23,47 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
+/// \file electromagnetic/TestEm0/include/PhysListEmStandard.hh
+/// \brief Definition of the PhysListEmStandard class
+//
+//
 // $Id$
 //
-/// \file VoxelSValuesEventAction.cc
-/// \brief Implementation of the VoxelSValuesEventAction class
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#include "VoxelSValuesEventAction.hh"
+#ifndef PhysListEmStandard_h
+#define PhysListEmStandard_h 1
 
-#include "VoxelSValuesRunAction.hh"
-#include "VoxelSValuesSteppingAction.hh"
-  // use of stepping action to get and reset accumulated energy  
-
-#include "G4RunManager.hh"
-#include "G4Event.hh"
+#include "G4VPhysicsConstructor.hh"
+#include "globals.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-VoxelSValuesEventAction* VoxelSValuesEventAction::fgInstance = 0;
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-VoxelSValuesEventAction* VoxelSValuesEventAction::Instance()
+class PhysListEmStandard : public G4VPhysicsConstructor
 {
-// Static access function via G4RunManager 
+  public: 
+    PhysListEmStandard(const G4String& name = "standard");
+   ~PhysListEmStandard();
 
-  return fgInstance;
-}      
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-VoxelSValuesEventAction::VoxelSValuesEventAction()
-: G4UserEventAction(),
-  fPrintModulo(100),
-  fEnergySum(0.),
-  fEnergy2Sum(0.)
-{ 
-  fgInstance = this;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-VoxelSValuesEventAction::~VoxelSValuesEventAction()
-{ 
-  fgInstance = 0;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void VoxelSValuesEventAction::BeginOfEventAction(const G4Event* event)
-{  
-  G4int eventNb = event->GetEventID();
-  if (eventNb%fPrintModulo == 0) { 
-    G4cout << "\n---> Begin of event: " << eventNb << G4endl;
-  }
+  public: 
+    // This method is dummy for physics
+    virtual void ConstructParticle() {};
  
-  // Reset accounted energy in stepping action
-  VoxelSValuesSteppingAction::Instance()->Reset();
-}
+    // This method will be invoked in the Construct() method.
+    // each physics process will be instantiated and
+    // registered to the process manager of each particle type 
+    virtual void ConstructProcess();
+};
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void VoxelSValuesEventAction::EndOfEventAction(const G4Event* /*event*/)
-{
-  // accumulate statistics
-  G4double energy = VoxelSValuesSteppingAction::Instance()->GetEnergy();
-  fEnergySum  += energy;
-  fEnergy2Sum += energy*energy;
-}  
+#endif
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void VoxelSValuesEventAction::Reset()
-{
-  //reset cumulative quantities
-  //
-  fEnergySum = 0.;
-  fEnergy2Sum = 0.;
-}
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+
+
+
+

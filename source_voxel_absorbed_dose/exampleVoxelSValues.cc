@@ -28,12 +28,15 @@
 /// \file exampleVoxelSValues.cc
 /// \brief Main program of the VoxelSValues example
 
-#include "VoxelSValuesDetectorConstruction.hh"
-#include "VoxelSValuesPrimaryGeneratorAction.hh"
-#include "VoxelSValuesRunAction.hh"
-#include "VoxelSValuesEventAction.hh"
-#include "VoxelSValuesSteppingAction.hh"
+//application includes (end user writes these)
+#include "DetectorConstruction.hh"
+#include "PrimaryGeneratorAction.hh"
+#include "RunAction.hh"
+#include "EventAction.hh"
+#include "SteppingAction.hh"
+#include "PhysicsList.hh"
 
+//g4 includes (g4 team wrote these)
 #include "G4RunManager.hh"
 #include "G4UImanager.hh"
 #include "QBBC.hh"
@@ -66,10 +69,21 @@ int main(int argc,char** argv)
   runManager->SetUserInitialization(new VoxelSValuesDetectorConstruction());
 
   // Physics list
-  G4VModularPhysicsList* physicsList = new QBBC;
-  physicsList->SetVerboseLevel(1);
-  runManager->SetUserInitialization(physicsList);
-    
+//  G4VModularPhysicsList* physicsList = new QBBC;
+//physicsList->SetVerboseLevel(1);
+//  runManager->SetUserInitialization(physicsList);
+
+//copied PhysicsList from examples/extended/electromagnetic/testEM0
+ PhysicsList* VoxelSValuesPhysicsList = new PhysicsList();
+ VoxelSValuesPhysicsList->AddPhysicsList("emstandard_opt4");
+ G4double gammaCut = 1. * um;
+ G4double electronCut = 1. * um;
+ G4double positronCut = electronCut;
+ VoxelSValuesPhysicsList->SetCutForGamma(gammaCut);
+ VoxelSValuesPhysicsList->SetCutForElectron(electronCut);
+ VoxelSValuesPhysicsList->SetCutForPositron(positronCut); 
+ runManager->SetUserInitialization(VoxelSValuesPhysicsList);   
+
   // Primary generator action
   runManager->SetUserAction(new VoxelSValuesPrimaryGeneratorAction());
 
