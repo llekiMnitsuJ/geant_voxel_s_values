@@ -68,7 +68,8 @@ G4VPhysicalVolume* VoxelSValuesDetectorConstruction::Construct()
   // Phantom parameters
   //  30 cm water cube
   G4double phantom_sizeXY = 30*cm, phantom_sizeZ = 30*cm;
-  G4Material* phantom_mat = nist->FindOrBuildMaterial("G4_WATER");
+  G4double new_density = 1.04*g/cm3;
+  G4Material* phantom_mat = nist->BuildMaterialWithNewDensity("TISSUECRISTY", "G4_TISSUE_SOFT_ICRP", new_density);
    
   // Option to switch on/off checking of volumes overlaps
   //
@@ -126,12 +127,13 @@ G4VPhysicalVolume* VoxelSValuesDetectorConstruction::Construct()
                     0,                       //copy number
                     checkOverlaps);          //overlaps checking
  
-  //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx     
+  //
   // source voxel
   //   We explicitly create a source voxel for scoring purposes in line with example B1.
   //
   
-  G4Material* sourceVoxelMat = nist->FindOrBuildMaterial("G4_WATER");
+  
+  G4Material* sourceVoxelMat = nist->FindOrBuildMaterial("TISSUECRISTY");
   G4ThreeVector pos1 = G4ThreeVector(0*mm, 0*cm, 0*cm);
         
   // Box shape for isotropic voxel
