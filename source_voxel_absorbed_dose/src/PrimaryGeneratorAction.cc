@@ -84,11 +84,13 @@ VoxelSValuesPrimaryGeneratorAction::VoxelSValuesPrimaryGeneratorAction()
 
  //set initial position distribution
  G4SPSPosDistribution *posDist = fGenParticleSrc->GetCurrentSource()->GetPosDist();
- posDist->SetCentreCoords(G4ThreeVector(0.,0.,0.));
+ posDist->SetPosDisType("Volume");
+ posDist->SetPosDisShape("Para");
  G4double halfxyz = 0.5*3.0*mm;
  posDist->SetHalfX(halfxyz);
  posDist->SetHalfY(halfxyz);
  posDist->SetHalfZ(halfxyz);
+ posDist->SetCentreCoords(G4ThreeVector(0.,0.,0.));
 
   //set initial angular distribution
  G4SPSAngDistribution *angDist = fGenParticleSrc->GetCurrentSource()->GetAngDist();
