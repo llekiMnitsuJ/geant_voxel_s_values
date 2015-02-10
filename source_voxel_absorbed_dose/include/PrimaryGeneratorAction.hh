@@ -34,6 +34,7 @@
 #include "G4VUserPrimaryGeneratorAction.hh"
 #include "globals.hh"
 
+
 class G4GeneralParticleSource;
 class G4Event;
 class VoxelSValuesDetectorConstruction;
@@ -56,12 +57,12 @@ class VoxelSValuesPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     virtual void GeneratePrimaries(G4Event*);         
   
     // method to access particle gun
-    const G4GeneralParticleSource* GetGeneralParticleSourceGun() const { return fParticleGun; }
+    G4GeneralParticleSource* GetGeneralParticleSourceGun() const { return fGenParticleSrc; }
   
   private:
     static VoxelSValuesPrimaryGeneratorAction* fgInstance;
    
-    G4GeneralParticleSource*  fParticleGun; // pointer a to G4 gun class
+    G4GeneralParticleSource*  fGenParticleSrc; // pointer a to G4 gun class
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -39,6 +39,7 @@
   // - stepping action: to get info about accounting volume 
 
 //includes written by g4 team
+#include "G4GeneralParticleSource.hh"
 #include "G4Run.hh"
 #include "G4RunManager.hh"
 #include "G4UnitsTable.hh"
@@ -99,12 +100,15 @@ void VoxelSValuesRunAction::EndOfRunAction(const G4Run* aRun)
   G4double rmsDose = rms/mass;
 
   // Run conditions
-  //
-  const G4ParticleGun* particleGun 
-    = VoxelSValuesPrimaryGeneratorAction::Instance()->GetParticleGun();
-  G4String particleName 
-    = particleGun->GetParticleDefinition()->GetParticleName();                       
-  G4double particleEnergy = particleGun->GetParticleEnergy();
+  // Ahh, I need to look up const crap. Whn I had my application returning
+  // a const G4GeneralParticleSource* then I was unable to find the functions
+  // that were available for particle definition and particle name through compiler
+  // warnings telling me the functions could not be found.
+  G4GeneralParticleSource* genParticleSrc
+    = VoxelSValuesPrimaryGeneratorAction::Instance()->GetGeneralParticleSourceGun();
+  G4ParticleDefinition* partDef = genParticleSrc->GetCurrentSource()->GetParticleDefinition();
+  G4String particleName = partDef->GetParticleName();
+  G4double particleEnergy = genParticleSrc->GetParticleEnergy();
         
   G4double dNumEvents = static_cast<G4double>(nofEvents); 
   // Print

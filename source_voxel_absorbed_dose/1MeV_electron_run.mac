@@ -3,6 +3,6 @@
 # Can be run in batch, without graphic
 # or interactively: Idle> /control/execute run1.mac
 #
-/gun/particle e-
-/gun/energy 1 MeV
-/run/beamOn 20000
+/gps/particle e-
+/gps/energy 1 MeV
+/run/beamOn 100000

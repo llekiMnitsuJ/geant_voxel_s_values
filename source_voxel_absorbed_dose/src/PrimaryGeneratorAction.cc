@@ -40,6 +40,7 @@
 #include "G4LogicalVolume.hh"
 #include "G4Box.hh"
 #include "G4RunManager.hh"
+#include "G4GeneralParticleSource.hh"
 #include "G4ParticleGun.hh"
 #include "G4ParticleTable.hh"
 #include "G4ParticleDefinition.hh"
@@ -63,28 +64,44 @@ const VoxelSValuesPrimaryGeneratorAction* VoxelSValuesPrimaryGeneratorAction::In
 
 VoxelSValuesPrimaryGeneratorAction::VoxelSValuesPrimaryGeneratorAction()
 : G4VUserPrimaryGeneratorAction(),
-  fParticleGun(0)
+  fGenParticleSrc(0)
 {
   G4int n_particle = 1;
-  fParticleGun  = new G4ParticleGun(n_particle);
+  fGenParticleSrc  = new G4GeneralParticleSource();
 
   // default particle kinematic
   G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
+  //set initial particle definition using particle table
   G4String particleName;
   G4ParticleDefinition* particle
     = particleTable->FindParticle(particleName="e-");
-  fParticleGun->SetParticleDefinition(particle);
-  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
-  fParticleGun->SetParticleEnergy(0.01*MeV);
+  fGenParticleSrc->SetParticleDefinition(particle);
+
+  //set initial energy distribution
+ G4SPSEneDistribution *eneDist = fGenParticleSrc->GetCurrentSource()->GetEneDist() ;
+ eneDist->SetEnergyDisType("Mono");
+ eneDist->SetMonoEnergy(1*MeV);
+
+ //set initial position distribution
+ G4SPSPosDistribution *posDist = fGenParticleSrc->GetCurrentSource()->GetPosDist();
+ posDist->SetCentreCoords(G4ThreeVector(0.,0.,0.));
+ G4double halfxyz = 0.5*3.0*mm;
+ posDist->SetHalfX(halfxyz);
+ posDist->SetHalfY(halfxyz);
+ posDist->SetHalfZ(halfxyz);
+
+  //set initial angular distribution
+ G4SPSAngDistribution *angDist = fGenParticleSrc->GetCurrentSource()->GetAngDist();
+ angDist->SetAngDistType("iso");
   
-  fgInstance = this;
+ fgInstance = this;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 VoxelSValuesPrimaryGeneratorAction::~VoxelSValuesPrimaryGeneratorAction()
 {
-  delete fParticleGun;
+  delete fGenParticleSrc;
   fgInstance = 0;
 }
 
@@ -117,23 +134,25 @@ void VoxelSValuesPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   //add energy sampling here...
 
   //sample position within the source voxel
-  G4double x0 = dXYZ * (G4UniformRand()-0.5);
-  G4double y0 = dXYZ * (G4UniformRand()-0.5);
-  G4double z0 = dXYZ * (G4UniformRand()-0.5);
+  //this is now performed via G4SPSPosDistribution of GPS
+  //G4double x0 = dXYZ * (G4UniformRand()-0.5);
+  //G4double y0 = dXYZ * (G4UniformRand()-0.5);
+  //G4double z0 = dXYZ * (G4UniformRand()-0.5);
   
-  //sample isotropic direction 
-  G4double cosTheta = -1.0 + 2.0*G4UniformRand();
-  G4double phi = CLHEP::twopi*G4UniformRand();
-  G4double sinTheta = sqrt(1. - cosTheta*cosTheta);
+  //sample isotropic direction
+  //this is now performed via G4SPSAngDistribution of GPS
+  //G4double cosTheta = -1.0 + 2.0*G4UniformRand();
+  //G4double phi = CLHEP::twopi*G4UniformRand();
+  //G4double sinTheta = sqrt(1. - cosTheta*cosTheta);
   
-  G4double px0 = sinTheta*cos(phi);
-  G4double py0 = sinTheta*sin(phi);
-  G4double pz0 = cosTheta;
+  //G4double px0 = sinTheta*cos(phi);
+  //G4double py0 = sinTheta*sin(phi);
+  //G4double pz0 = cosTheta;
 
-  fParticleGun->SetParticlePosition(G4ThreeVector(x0,y0,z0));
-  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(px0,py0,pz0));
+  //fGenParticleSrc->SetParticlePosition(G4ThreeVector(x0,y0,z0));
+  //fGenParticleSrc->SetParticleMomentumDirection(G4ThreeVector(px0,py0,pz0));
 
-  fParticleGun->GeneratePrimaryVertex(anEvent);
+  fGenParticleSrc->GeneratePrimaryVertex(anEvent);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
