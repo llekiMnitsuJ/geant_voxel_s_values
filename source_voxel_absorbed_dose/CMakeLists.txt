@@ -55,6 +55,7 @@ set(EXAMPLEVoxelSValues_SCRIPTS
   1MeV_electron_run.mac
   100keV_electron_run.mac
   10keV_electron_run.mac
+  Y90_beta_run.mac
   )
 
 foreach(_script ${EXAMPLEVoxelSValues_SCRIPTS})

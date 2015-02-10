@@ -65,7 +65,7 @@ int main(int argc,char** argv)
   G4RunManager * runManager = new G4RunManager;
 
   //Initialize the scoring manager
-  G4ScoringManager::GetScoringManager();
+  G4ScoringManager* scoreManager = G4ScoringManager::GetScoringManager();
 
   // Set mandatory initialization classes
   //
@@ -145,6 +145,7 @@ int main(int argc,char** argv)
 #ifdef G4VIS_USE
   delete visManager;
 #endif
+  delete scoreManager;
   delete runManager;
 
   return 0;
