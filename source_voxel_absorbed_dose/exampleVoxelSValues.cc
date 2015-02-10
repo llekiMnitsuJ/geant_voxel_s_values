@@ -38,6 +38,7 @@
 
 //g4 includes (g4 team wrote these)
 #include "G4RunManager.hh"
+#include "G4ScoringManager.hh"
 #include "G4UImanager.hh"
 #include "QBBC.hh"
 
@@ -62,6 +63,9 @@ int main(int argc,char** argv)
   // Construct the default run manager
   //
   G4RunManager * runManager = new G4RunManager;
+
+  //Initialize the scoring manager
+  G4ScoringManager::GetScoringManager();
 
   // Set mandatory initialization classes
   //

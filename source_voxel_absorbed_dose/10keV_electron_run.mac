@@ -5,4 +5,19 @@
 #
 /gps/particle e-
 /gps/energy 10 keV
+
+#set the scoring mesh
+/score/create/boxMesh boxMesh_1
+#mesh of 11x11x11 3mm voxels with the center voxel being centered around 0,0,0.
+#for boxSize command use half widths similar to G4Box
+/score/mesh/boxSize 16.5 16.5 16.5 mm
+/score/mesh/nBin 11 11 11
+/score/quantity/doseDeposit myDose Gy
+/score/close
+
 /run/beamOn 1000
+
+#You will probably want to normalize the absorbed dose per particle...
+/score/dumpQuantityToFile boxMesh_1 myDose 10keV_electron_3mm.txt
+
+
